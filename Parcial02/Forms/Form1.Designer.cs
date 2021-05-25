@@ -113,6 +113,7 @@
             this.txtPassword.Font = new System.Drawing.Font("Lucida Sans", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
             this.txtPassword.Location = new System.Drawing.Point(168, 267);
             this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(209, 28);
             this.txtPassword.TabIndex = 6;
             // 
@@ -129,6 +130,7 @@
             this.btnLogIn.TabIndex = 7;
             this.btnLogIn.Text = "Iniciar sesión";
             this.btnLogIn.UseVisualStyleBackColor = false;
+            this.btnLogIn.Click += new System.EventHandler(this.btnLogIn_Click);
             // 
             // grpForm1
             // 

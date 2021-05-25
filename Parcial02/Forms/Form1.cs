@@ -7,6 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Parcial02.Context;
+using User = Parcial02.Entities.Users.User;
 
 namespace Parcial02
 {
@@ -21,15 +25,6 @@ namespace Parcial02
         private void btnSignIn_Click(object sender, EventArgs e)
         {
             using (frmSignIn signInForm = new frmSignIn())
-            {
-                DialogResult result = signInForm.ShowDialog();
-                
-                if (result == DialogResult.OK)
-                {
-                    MessageBox.Show("Registro exitoso. Inicie sesion.", "Registro",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
         }
 
         // Abrir Form para recuperar/cambiar contrasena. Y Contrasena cambiada.
@@ -46,5 +41,33 @@ namespace Parcial02
                 }
             }
         }
+
+        // Inicio de sesion
+        private void btnLogIn_Click(object sender, EventArgs e)
+        {
+            var db = new UcaClinicContext();
+            List<User> users = db.Users
+                .Include(u => u.SecurityQuestion)
+                .ToList();
+            
+            string userName = txtUser.Text;
+            string password = txtPassword.Text;
+
+            List<User> result = users
+                .Where(u => u.UserName == userName &&
+                            u.Password == password)
+                .ToList();
+
+            if (result.Count() > 0)
+            {
+                MessageBox.Show("Bienvenido!", "Clinica UCA", MessageBoxButtons.OK);
+                //frmMain window = new frmMain(result[0]);
+                //window.Show();
+                this.Hide();
+            }
+
+
+        }
+        
     }
 }

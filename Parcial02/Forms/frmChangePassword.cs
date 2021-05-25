@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
+using Parcial02.Context;
+using Parcial02.Entities.Questions;
+using User = Parcial02.Entities.Users.User;
 
 namespace Parcial02
 {
@@ -12,43 +18,78 @@ namespace Parcial02
         
         // CHECK THIS 
         // Primera parte del cambio de contrasena. Verificando Carne y respuesta de seguridad.
-        private void btnCheck_Click(object sender, EventArgs e)
+        
+        private void btnCheckCarne_Click(object sender, EventArgs e)
         {
-            if (txtCarneChangePassword.Text.Equals("00253720") && txtQuestionChangePassword.Text.Equals("ala"))
+            var db = new UcaClinicContext();
+            List<User> users = db.Users
+                .Include(u => u.SecurityQuestion)
+                .ToList();
+
+            string CardId = txtCarneChangePassword.Text;
+
+            List<User> result = users
+                .Where(u => u.CardId == CardId)
+                .ToList();
+            if (result.Count > 0)
             {
-                MessageBox.Show("Datos correctos! Ahora puede cambiar la contrasena.", "Exito", MessageBoxButtons.OK);
-                btnChangePassword.Show();
-                grpUpdatePassword.Show();
-               
-            }
-            else if (txtCarneChangePassword.Text.Length < 0 || txtQuestionChangePassword.Text.Length < 0)
-            {
-                MessageBox.Show("Datos Incompletos!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                grpCheckQuestion.Show(); 
             }
             else
             {
-                MessageBox.Show("No existe una cuenta con dicho carne o la respuesta de seguridad es incorrecta!",
-                    "Datos erroneos!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("No existe una cuenta con ese carne, si no tiene cuenta registrese antes!", "Error!", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
-        // Segunda parte del cambio de contrasena. Nueva contrasena escrita.
-        private void btnChangePassword_Click(object sender, EventArgs e)
+        // Segunda parte del cambio de contrasena. Pregunta
+        private void btnCheckQuestion_Click(object sender, EventArgs e)
         {
-            if (txtChangePassword.Text.Equals(txtChangePassword2.Text))
+
+            var db = new UcaClinicContext();
+            List<User> users = db.Users
+                .Include(u => u.SecurityQuestion)
+                .ToList();
+
+            string answer = txtQuestionChangePassword.Text;
+            
+            bool result = users
+                .Where(u => u.SecurityAnswer == answer)
+                .ToList().Count() > 0;
+
+            if (result)
             {
-                this.DialogResult = DialogResult.OK;
-                // UPDATE PASSWORD HERE
-                this.Close();
-            }
-            else if (txtChangePassword.Text.Length < 0 || txtChangePassword2.Text.Length < 0)
-            {
-                MessageBox.Show("Datos Incompletos!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                grpUpdatePassword.Show();
+                btnChangePassword.Show();
             }
             else
             {
-                MessageBox.Show("Las contrasenas no coinciden!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Datos Erroneos!", "Error!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+        
+        
+        
+        // Tercera parte del cambio de contrasena. Update contrasena
+        private void btnChangePassword_Click(object sender, EventArgs e)
+        {
+            if (txtChangePassword.Text == txtChangePassword2.Text)
+            {
+                string newPassword = txtChangePassword.Text;
+                
+                var 
+            }
+            else
+            {
+                MessageBox.Show("Contrasenas no coinciden!", "Error!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            
+            
+        }
+
+
+        
     }
 }
