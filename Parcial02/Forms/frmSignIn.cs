@@ -1,14 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using Parcial02.Context;
+using Parcial02.Entities.Questions;
+using Parcial02.Entities.Users;
 
 namespace Parcial02
 {
-    public partial class frmSignIn : Form
+    public partial class frmSignIn : Form 
     {
         public frmSignIn()
         {
             InitializeComponent();
         }
+        
+        
 
         // Ventana de registro de usuario. Boton para guardar y registrar usuario nuevo.
         private void btnSignIn_Click(object sender, EventArgs e)
@@ -18,9 +25,27 @@ namespace Parcial02
             {
                 if (txtPasswordSign.Text.Equals(txtPasswordSign2.Text))
                 {
-                    this.DialogResult = DialogResult.OK;
-                    // INSERT NEW USER TO THE DATA BASE
-                    this.Close();
+                    // Creando el usuario
+                    User newUser = new User();
+                    newUser.CardId = txtIdSign.Text;
+                    newUser.UserName = txtUserSign.Text;
+                    newUser.Password = txtPasswordSign.Text;
+                    newUser.SecurityAnswer = txtQuestionSign.Text;
+                    Question question = (Question) cmbQuestions.SelectedItem;
+
+                    var db = new UcaClinicContext();
+                    Question ques = db.Set<Question>()
+                        .SingleOrDefault(q => q.Id == question.Id);
+
+                    newUser.SecurityQuestion = ques;
+
+                    db.Add(newUser);
+                    db.SaveChanges();
+
+                    MessageBox.Show("Usuario creado con exito! Ahora inicie sesion", "Registro terminado",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Hide();
+
                 }
                 else
                 {
@@ -34,5 +59,17 @@ namespace Parcial02
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
+
+        // Combobox
+        private void frmSignIn_Load(object sender, EventArgs e)
+        {
+            var db = new UcaClinicContext();
+
+            cmbQuestions.DataSource = db.Questions.ToList();
+            cmbQuestions.DisplayMember = "SecurityQuestion";
+            cmbQuestions.ValueMember = "Id"; 
+        }
+
+       
     }
 }

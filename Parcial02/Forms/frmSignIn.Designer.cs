@@ -123,6 +123,7 @@ namespace Parcial02
             this.txtPasswordSign2.Font = new System.Drawing.Font("Lucida Sans", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
             this.txtPasswordSign2.Location = new System.Drawing.Point(198, 246);
             this.txtPasswordSign2.Name = "txtPasswordSign2";
+            this.txtPasswordSign2.PasswordChar = '*';
             this.txtPasswordSign2.Size = new System.Drawing.Size(231, 28);
             this.txtPasswordSign2.TabIndex = 14;
             // 
@@ -132,6 +133,7 @@ namespace Parcial02
             this.txtPasswordSign.Font = new System.Drawing.Font("Lucida Sans", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
             this.txtPasswordSign.Location = new System.Drawing.Point(198, 189);
             this.txtPasswordSign.Name = "txtPasswordSign";
+            this.txtPasswordSign.PasswordChar = '*';
             this.txtPasswordSign.Size = new System.Drawing.Size(231, 28);
             this.txtPasswordSign.TabIndex = 13;
             // 
@@ -247,6 +249,7 @@ namespace Parcial02
             this.Name = "frmSignIn";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Clínica UCA Registrate";
+            this.Load += new System.EventHandler(this.frmSignIn_Load);
             this.grpFrmSignIn.ResumeLayout(false);
             this.grpFrmSignIn.PerformLayout();
             this.ResumeLayout(false);
